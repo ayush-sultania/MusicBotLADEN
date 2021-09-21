@@ -1,3 +1,4 @@
+import os
 import discord
 from discord.ext import commands
 import music
@@ -10,4 +11,6 @@ for i in range(len(cogs)) :
 
 
 
-client.run("ODg3NzY0OTY3OTI1ODc0NzQ4.YUI5jg.WlW_KwfODYkAHhjN0cGivAkRlAQ")
+my_secret = os.environ['abracadabra']
+
+client.run(my_secret)

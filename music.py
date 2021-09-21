@@ -1,7 +1,21 @@
 import discord
 from discord.ext import commands
 import youtube_dl
+from requests import get
+from youtube_dl import YoutubeDL
 
+YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True'}
+
+def search(arg):
+    with YoutubeDL(YDL_OPTIONS) as ydl:
+        try:
+            get(arg) 
+        except:
+            video = ydl.extract_info(f"ytsearch:{arg}", download=False)['entries'][0]
+        else:
+            video = ydl.extract_info(arg, download=False)
+
+    return video
 class music(commands.Cog):
   def __init__(self,client):
     self.client = client
@@ -24,7 +38,11 @@ class music(commands.Cog):
     YDL_OPTIONS = {'format' : "bestaudio"}
     vc = ctx.voice_client
     with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-      info = ydl.extract_info(url, download = False)
+      try:
+        info = ydl.extract_info(url, download = False)
+        
+      except:
+        info = search(url)
       url2 = info['formats'][0]['url']
       source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
       vc.play(source)
